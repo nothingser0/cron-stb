@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"cron-stb/internal/config"
@@ -118,4 +119,50 @@ func readLines(filePath string) ([]string, error) {
 		}
 	}
 	return lines, scanner.Err()
+}
+
+func absFloat(v float64) float64 {
+	if v < 0 {
+		return -v
+	}
+	return v
+}
+
+func formatNetSign(net float64) string {
+	if net > 0 {
+		return "+"
+	} else if net < 0 {
+		return "-"
+	}
+	return ""
+}
+
+func formatRupiah(amount float64) string {
+	sign := ""
+	if amount < 0 {
+		sign = "-"
+		amount = -amount
+	}
+	val := int64(amount + 0.5)
+	s := strconv.FormatInt(val, 10)
+	n := len(s)
+	if n <= 3 {
+		return sign + s
+	}
+
+	var result []byte
+	rem := n % 3
+	if rem > 0 {
+		result = append(result, s[:rem]...)
+		if rem < n {
+			result = append(result, '.')
+		}
+	}
+	for i := rem; i < n; i += 3 {
+		result = append(result, s[i:i+3]...)
+		if i+3 < n {
+			result = append(result, '.')
+		}
+	}
+	return sign + string(result)
 }

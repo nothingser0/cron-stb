@@ -117,7 +117,10 @@ func (j *LearningWeeklyJob) Run(ctx context.Context) error {
 
 	if len(recentLogs) > 0 {
 		lines = append(lines, fmt.Sprintf("✍️ **Sesi Belajar Tercatat (%d sesi):**", len(recentLogs)))
-		limit := min(len(recentLogs), 5)
+		limit := len(recentLogs)
+		if limit > 5 {
+			limit = 5
+		}
 		for _, l := range recentLogs[:limit] {
 			lines = append(lines, fmt.Sprintf("• `[%s]` %s", l.Tanggal[5:], l.Kegiatan))
 		}
