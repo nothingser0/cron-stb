@@ -32,8 +32,15 @@ Lightweight cron daemon and job runner for STB / ARM Linux (Armbian, CasaOS).
 2. Set `HERMES_WORKSPACE_DIR` in `.env` (default: `/media/devmon/docker-disk/hermes-data/workspace`).
 3. Put `token.json` and `credentials.json` into `./data/`.
 
-## Running with Docker (CasaOS)
+## Running with Docker (CasaOS / STB)
 
+### 1. Jalankan dengan Prebuilt Image dari GHCR (Rekomendasi - Hemat CPU STB)
+```bash
+docker compose pull
+docker compose up -d
+```
+
+### 2. Atau Build Sendiri Secara Lokal
 ```bash
 docker compose up -d --build
 ```

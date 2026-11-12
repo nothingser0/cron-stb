@@ -2,7 +2,7 @@ name: cron-stb
 
 services:
   cron-stb:
-    image: cron-stb:latest
+    image: ghcr.io/nothingser0/cron-stb:latest
     build:
       context: .
       dockerfile: Dockerfile
