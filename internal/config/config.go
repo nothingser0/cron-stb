@@ -18,6 +18,7 @@ type Config struct {
 	TokenFile       string
 	TokenWriteFile  string
 	BaseDataDir     string
+	HermesWorkspace string
 }
 
 var (
@@ -59,6 +60,7 @@ func LoadConfig() *Config {
 
 	cfg.DiscordBotToken = os.Getenv("DISCORD_BOT_TOKEN")
 	cfg.DefaultSheetID = GetString("SHEET_ID", "")
+	cfg.HermesWorkspace = GetString("HERMES_WORKSPACE_DIR", GetString("WORKSPACE_DIR", "/media/devmon/docker-disk/hermes-data/workspace"))
 
 	cfg.CredentialsFile = findFile(
 		os.Getenv("CREDENTIALS_FILE"),
@@ -132,6 +134,7 @@ func (c *Config) GetJobSheetID(jobKey string) string {
 func (c *Config) PrintStatus() {
 	fmt.Println("Configuration:")
 	fmt.Printf("  Data Dir   : %s\n", c.BaseDataDir)
+	fmt.Printf("  Workspace  : %s\n", c.HermesWorkspace)
 	if c.DiscordBotToken != "" {
 		fmt.Println("  Discord    : configured")
 	} else {
