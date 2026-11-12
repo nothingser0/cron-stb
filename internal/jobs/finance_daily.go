@@ -85,7 +85,7 @@ func (j *FinanceDailyJob) Run(ctx context.Context) error {
 		return fmt.Errorf("missing DISCORD_BOT_TOKEN")
 	}
 
-	channelID := config.GetInt64("FINANCE_CHANNEL_ID", 1511383944854110308)
+	channelID := config.GetInt64("FINANCE_CHANNEL_ID", 0)
 	if channelID == 0 && !isDryRun {
 		return fmt.Errorf("FINANCE_CHANNEL_ID not configured")
 	}

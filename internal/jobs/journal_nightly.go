@@ -37,7 +37,7 @@ func (j *JournalNightlyJob) Run(ctx context.Context) error {
 		return fmt.Errorf("missing DISCORD_BOT_TOKEN")
 	}
 
-	channelID := config.GetInt64("JOURNAL_CHANNEL_ID", 1511383970426654874)
+	channelID := config.GetInt64("JOURNAL_CHANNEL_ID", 0)
 	if channelID == 0 && !isDryRun {
 		return fmt.Errorf("JOURNAL_CHANNEL_ID not configured")
 	}

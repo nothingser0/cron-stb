@@ -47,7 +47,7 @@ func (j *GoalsWeeklyJob) Run(ctx context.Context) error {
 		return fmt.Errorf("missing DISCORD_BOT_TOKEN")
 	}
 
-	channelID := config.GetInt64("GOALS_CHANNEL_ID", 1511383975522730134)
+	channelID := config.GetInt64("GOALS_CHANNEL_ID", 0)
 	if channelID == 0 && !isDryRun {
 		return fmt.Errorf("GOALS_CHANNEL_ID not configured")
 	}

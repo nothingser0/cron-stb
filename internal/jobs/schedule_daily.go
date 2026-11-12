@@ -87,7 +87,7 @@ func (j *ScheduleDailyJob) Run(ctx context.Context) error {
 		return fmt.Errorf("missing DISCORD_BOT_TOKEN")
 	}
 
-	channelID := config.GetInt64("SCHEDULE_CHANNEL_ID", 1511383864818274305)
+	channelID := config.GetInt64("SCHEDULE_CHANNEL_ID", 0)
 	if channelID == 0 && !isDryRun {
 		return fmt.Errorf("SCHEDULE_CHANNEL_ID not configured")
 	}
