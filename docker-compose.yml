@@ -1,0 +1,47 @@
+name: cron-stb
+
+services:
+  cron-stb:
+    image: cron-stb:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cron-stb
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Jakarta
+      - DATA_DIR=/app/data
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN:-}
+      - SHEET_ID=${SHEET_ID:-}
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+    x-casaos:
+      envs:
+        - container: DISCORD_BOT_TOKEN
+          description:
+            en_us: Discord Bot Token
+        - container: SHEET_ID
+          description:
+            en_us: Google Spreadsheet ID
+        - container: TZ
+          description:
+            en_us: Timezone
+      volumes:
+        - container: /app/data
+          description:
+            en_us: Data Directory
+
+x-casaos:
+  architectures:
+    - arm64
+    - arm
+    - amd64
+  main: cron-stb
+  author: Zen
+  category: Utilities
+  description:
+    en_us: Lightweight Cron Scheduler & Discord Sync
+  icon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/cron.png
+  title:
+    en_us: Cron STB

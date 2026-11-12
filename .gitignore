@@ -1,0 +1,13 @@
+# Binaries
+*.exe
+cron-stb-arm64
+cron-stb-arm7
+cron-stb-linux-*
+
+# Environment & Secrets (JANGAN PERNAH DI-PUSH KE GITHUB)
+.env
+*.env
+data/
+*.json
+!credentials.example.json
+!token.example.json
