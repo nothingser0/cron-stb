@@ -146,7 +146,7 @@ func (j *ScheduleDailyJob) Run(ctx context.Context) error {
 				if loc := e.GetLokasi(); loc != "" {
 					locStr = fmt.Sprintf(" (📍 %s)", loc)
 				}
-				lines = append(lines, fmt.Sprintf("• `%s` **%s**%s", timeStr, e.GetJudul(), locStr))
+				lines = append(lines, fmt.Sprintf("• %s %s%s", timeStr, e.GetJudul(), locStr))
 			}
 			lines = append(lines, "")
 		}
@@ -156,9 +156,9 @@ func (j *ScheduleDailyJob) Run(ctx context.Context) error {
 			for _, d := range deadlines {
 				timeStr := ""
 				if t := d.GetWaktu(); t != "" {
-					timeStr = fmt.Sprintf(" [%s]", t)
+					timeStr = fmt.Sprintf(" (%s)", t)
 				}
-				lines = append(lines, fmt.Sprintf("• ⚠️ **%s**%s", d.GetJudul(), timeStr))
+				lines = append(lines, fmt.Sprintf("• %s%s", d.GetJudul(), timeStr))
 			}
 			lines = append(lines, "")
 		}

@@ -139,7 +139,7 @@ func (j *TasksDailyJob) Run(ctx context.Context) error {
 				if action := t.GetNextAction(); action != "" {
 					actionStr = fmt.Sprintf("\n   ↳ *Next Action:* %s", action)
 				}
-				lines = append(lines, fmt.Sprintf("• **%s**%s", t.GetTask(), actionStr))
+				lines = append(lines, fmt.Sprintf("• %s%s", t.GetTask(), actionStr))
 			}
 			lines = append(lines, "")
 		}
@@ -156,13 +156,13 @@ func (j *TasksDailyJob) Run(ctx context.Context) error {
 		}
 
 		limit := min(len(fokusList), 3)
-		for i, t := range fokusList[:limit] {
+		for _, t := range fokusList[:limit] {
 			prio := strings.ToUpper(t.GetPrioritas())
 			action := t.GetNextAction()
 			if action == "" {
 				action = "Tentukan langkah fisik pertama"
 			}
-			lines = append(lines, fmt.Sprintf("%d. `[%s]` **%s**\n   ↳ *Next:* %s", i+1, prio, t.GetTask(), action))
+			lines = append(lines, fmt.Sprintf("• [%s] %s\n   ↳ *Next:* %s", prio, t.GetTask(), action))
 		}
 		lines = append(lines, "")
 

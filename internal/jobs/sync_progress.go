@@ -78,7 +78,8 @@ func (j *SyncProgressJob) Run(ctx context.Context) error {
 	}
 
 	if message == "" {
-		message = "📊 **Airdrop Progress Update**\n\nNo data available."
+		now := getWIBNow()
+		message = fmt.Sprintf("📈 **Rekap Progress Airdrop** — %s\n\nBelum ada data progress yang tercatat.\n💡 _Update status garapan di Google Sheets untuk melihat rekap di sini._", now.Format("02 Jan 2006"))
 	}
 
 	discordClient := discord.NewClient(token)
@@ -96,7 +97,6 @@ func formatProgress(sheetsData [][]string) string {
 	}
 
 	var winList, waitingList, loseList, receivedList []string
-	totalGarap := 0
 
 	for i, row := range sheetsData {
 		if i < 6 || len(row) < 34 {
@@ -105,10 +105,6 @@ func formatProgress(sheetsData [][]string) string {
 
 		status := strings.ToLower(strings.TrimSpace(row[0]))
 		nama := strings.TrimSpace(row[33])
-
-		if len(row) > 3 && strings.TrimSpace(row[3]) != "" {
-			totalGarap++
-		}
 
 		if status == "" || nama == "" {
 			continue
@@ -139,40 +135,37 @@ func formatProgress(sheetsData [][]string) string {
 
 	var lines []string
 	lines = append(lines,
-		fmt.Sprintf("**Airdrop Progress Update** — %s", now.Format("02 Jan 2006")),
+		fmt.Sprintf("📈 **Rekap Progress Airdrop** — %s", now.Format("02 Jan 2006")),
 		"",
 	)
-
-	if totalGarap > 0 {
-		lines = append(lines,
-			fmt.Sprintf("📊 **Total:** %d airdrops", totalGarap),
-			"",
-			"**Summary:**",
-			fmt.Sprintf("• Win: %d", len(winList)),
-			fmt.Sprintf("• Waiting: %d", len(waitingList)),
-			fmt.Sprintf("• Lose: %d", len(loseList)),
-			fmt.Sprintf("• Received: %d", len(receivedList)),
-			"",
-		)
-	}
 
 	appendSection := func(title string, list []string, limit int) {
 		if len(list) == 0 {
 			return
 		}
-		lines = append(lines, title)
+		lines = append(lines, fmt.Sprintf("%s (%d):", title, len(list)))
 		take := min(len(list), limit)
 		lines = append(lines, list[:take]...)
 		if len(list) > limit {
-			lines = append(lines, fmt.Sprintf("_...and %d more_", len(list)-limit))
+			lines = append(lines, fmt.Sprintf("_...dan %d lainnya_", len(list)-limit))
 		}
 		lines = append(lines, "")
 	}
 
-	appendSection("⏳ **Waiting:**", waitingList, 15)
-	appendSection("🎉 **Win:**", winList, 15)
-	appendSection("❌ **Lose:**", loseList, 10)
-	appendSection("💰 **Received:**", receivedList, 15)
+	appendSection("🎉 **Win / Siap Claim**", winList, 15)
+	appendSection("⏳ **Waiting**", waitingList, 15)
+	appendSection("💰 **Received / Cair**", receivedList, 15)
+	appendSection("❌ **Lose**", loseList, 10)
+
+	totalTracked := len(winList) + len(waitingList) + len(receivedList) + len(loseList)
+	resolved := len(winList) + len(receivedList) + len(loseList)
+	winRateStr := ""
+	if resolved > 0 {
+		winRate := float64(len(winList)+len(receivedList)) / float64(resolved) * 100
+		winRateStr = fmt.Sprintf(" • Win Rate: %.0f%%", winRate)
+	}
+
+	lines = append(lines, fmt.Sprintf("📊 _Total %d garapan dipantau%s._", totalTracked, winRateStr))
 
 	return strings.Join(lines, "\n")
 }

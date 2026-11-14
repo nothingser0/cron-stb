@@ -81,8 +81,8 @@ func (j *GoalsWeeklyJob) Run(ctx context.Context) error {
 			"💡 _Awali minggu dengan mencatat 1 target terukur di channel ini (contoh: `Target lari 10K sebelum 31 Des`)._",
 		)
 	} else {
-		lines = append(lines, "Mari tinjau target yang sedang kamu perjuangkan:")
-		for i, g := range activeGoals {
+		lines = append(lines, "📌 **Target Aktif:**")
+		for _, g := range activeGoals {
 			kat := strings.ToUpper(g.Kategori)
 			if kat == "" {
 				kat = "UMUM"
@@ -95,7 +95,7 @@ func (j *GoalsWeeklyJob) Run(ctx context.Context) error {
 			if g.Ukuran != "" {
 				ukur = fmt.Sprintf("\n   ↳ *Tolok ukur:* %s", g.Ukuran)
 			}
-			lines = append(lines, fmt.Sprintf("%d. `[%s]` **%s** (Deadline: %s)%s", i+1, kat, g.Goal, dl, ukur))
+			lines = append(lines, fmt.Sprintf("• [%s] %s (Deadline: %s)%s", kat, g.Goal, dl, ukur))
 		}
 		lines = append(lines, "", "🔥 _Apa satu langkah kecil yang akan kamu eksekusi minggu ini untuk mendekatkan targetmu?_")
 	}

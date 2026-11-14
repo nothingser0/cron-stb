@@ -90,14 +90,9 @@ func (j *SyncActiveJob) Run(ctx context.Context) error {
 
 func formatActiveTasks(dailyData, todayData [][]string) string {
 	var dailyTasks []string
-	dailyCount := 0
-
 	for i, row := range dailyData {
 		if i < 2 || len(row) < 32 {
 			continue
-		}
-		if len(row) > 4 && strings.TrimSpace(row[4]) != "" {
-			dailyCount++
 		}
 		if name := strings.TrimSpace(row[31]); name != "" {
 			dailyTasks = append(dailyTasks, "• "+name)
@@ -105,21 +100,16 @@ func formatActiveTasks(dailyData, todayData [][]string) string {
 	}
 
 	var todayTasks []string
-	todayCount := 0
-
 	for i, row := range todayData {
 		if i < 6 || len(row) < 32 {
 			continue
-		}
-		if len(row) > 4 && strings.TrimSpace(row[4]) != "" {
-			todayCount++
 		}
 		if name := strings.TrimSpace(row[31]); name != "" {
 			todayTasks = append(todayTasks, "• "+name)
 		}
 	}
 
-	total := dailyCount + todayCount
+	total := len(dailyTasks) + len(todayTasks)
 
 	loc, err := time.LoadLocation("Asia/Jakarta")
 	if err != nil {
@@ -128,37 +118,35 @@ func formatActiveTasks(dailyData, todayData [][]string) string {
 	now := time.Now().In(loc)
 
 	var lines []string
-	lines = append(lines, fmt.Sprintf("**Airdrop Active Tasks** — %s", now.Format("02 Jan 2006")), "")
-
-	if len(dailyTasks) > 0 {
-		lines = append(lines, "📅 **Daily Tasks:**")
-		limit := min(len(dailyTasks), 20)
-		lines = append(lines, dailyTasks[:limit]...)
-		if len(dailyTasks) > 20 {
-			lines = append(lines, fmt.Sprintf("_...and %d more_", len(dailyTasks)-20))
-		}
-		lines = append(lines, "")
-	}
+	lines = append(lines, fmt.Sprintf("🚀 **Garapan Airdrop Hari Ini** — %s", now.Format("02 Jan 2006")), "")
 
 	if len(todayTasks) > 0 {
-		lines = append(lines, "🔥 **Today Tasks:**")
+		lines = append(lines, "🔥 **Fokus Hari Ini (Today):**")
 		limit := min(len(todayTasks), 20)
 		lines = append(lines, todayTasks[:limit]...)
 		if len(todayTasks) > 20 {
-			lines = append(lines, fmt.Sprintf("_...and %d more_", len(todayTasks)-20))
+			lines = append(lines, fmt.Sprintf("_...dan %d garapan lainnya_", len(todayTasks)-20))
 		}
 		lines = append(lines, "")
 	}
 
-	if len(dailyTasks) == 0 && len(todayTasks) == 0 {
+	if len(dailyTasks) > 0 {
+		lines = append(lines, "📅 **Garapan Rutin (Daily):**")
+		limit := min(len(dailyTasks), 20)
+		lines = append(lines, dailyTasks[:limit]...)
+		if len(dailyTasks) > 20 {
+			lines = append(lines, fmt.Sprintf("_...dan %d garapan lainnya_", len(dailyTasks)-20))
+		}
+		lines = append(lines, "")
+	}
+
+	if total == 0 {
 		lines = append(lines,
-			"📅 **Daily Tasks:** _Empty_",
-			"🔥 **Today Tasks:** _Empty_",
-			"",
-			"No active airdrops right now",
+			"Tidak ada garapan airdrop aktif untuk hari ini. 🎉",
+			"✨ _Semua garapan sudah beres atau belum ada jadwal baru._",
 		)
 	} else {
-		lines = append(lines, fmt.Sprintf("**Total:** %d tasks", total))
+		lines = append(lines, fmt.Sprintf("📊 _Total %d garapan aktif hari ini._", total))
 	}
 
 	return strings.Join(lines, "\n")

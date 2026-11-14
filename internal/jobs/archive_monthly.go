@@ -169,28 +169,23 @@ func (j *ArchiveMonthlyJob) Run(ctx context.Context) error {
 
 	var lines []string
 	lines = append(lines,
-		fmt.Sprintf("📦 **Airdrop Archive** — %s", monthName),
+		fmt.Sprintf("📦 **Arsip Bulanan Airdrop** — %s", monthName),
 		"",
-		fmt.Sprintf("Total archived: %d projects", len(toArchive)),
-		fmt.Sprintf("Received: %d", receivedCount),
-		fmt.Sprintf("Lose: %d", loseCount),
-		"",
-		"**Received:**",
 	)
+
 	if len(receivedList) > 0 {
+		lines = append(lines, fmt.Sprintf("💰 **Received / Cair (%d):**", receivedCount))
 		lines = append(lines, receivedList...)
-	} else {
-		lines = append(lines, "• None")
+		lines = append(lines, "")
 	}
 
-	lines = append(lines, "", "**Lose:**")
 	if len(loseList) > 0 {
+		lines = append(lines, fmt.Sprintf("❌ **Lose (%d):**", loseCount))
 		lines = append(lines, loseList...)
-	} else {
-		lines = append(lines, "• None")
+		lines = append(lines, "")
 	}
 
-	lines = append(lines, "", fmt.Sprintf("Moved to: Google Sheets %s", destSheet))
+	lines = append(lines, fmt.Sprintf("📁 _Total %d garapan selesai dipindahkan ke sheet %s._", len(toArchive), destSheet))
 
 	discordClient := discord.NewClient(token)
 	if err := discordClient.SendChannelMessage(channelID, strings.Join(lines, "\n")); err != nil {

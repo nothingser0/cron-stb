@@ -110,7 +110,7 @@ func (j *LearningWeeklyJob) Run(ctx context.Context) error {
 	if len(milestones) > 0 {
 		lines = append(lines, "🏆 **Milestone Tercapai Minggu Ini:**")
 		for _, m := range milestones {
-			lines = append(lines, fmt.Sprintf("• **[%s]** %s", strings.ToUpper(m.Topik), m.Kegiatan))
+			lines = append(lines, fmt.Sprintf("• [%s] %s", strings.ToUpper(m.Topik), m.Kegiatan))
 		}
 		lines = append(lines, "")
 	}
@@ -122,7 +122,7 @@ func (j *LearningWeeklyJob) Run(ctx context.Context) error {
 			limit = 5
 		}
 		for _, l := range recentLogs[:limit] {
-			lines = append(lines, fmt.Sprintf("• `[%s]` %s", l.Tanggal[5:], l.Kegiatan))
+			lines = append(lines, fmt.Sprintf("• %s %s", l.Tanggal[5:], l.Kegiatan))
 		}
 		if len(recentLogs) > 5 {
 			lines = append(lines, fmt.Sprintf("_...dan %d sesi lainnya_", len(recentLogs)-5))
@@ -133,7 +133,7 @@ func (j *LearningWeeklyJob) Run(ctx context.Context) error {
 	if len(ongoingMaterials) > 0 {
 		lines = append(lines, "📖 **Materi yang Sedang Dipelajari:**")
 		for _, mat := range ongoingMaterials {
-			lines = append(lines, fmt.Sprintf("• **%s** `[%s]`", mat.Judul, mat.Topik))
+			lines = append(lines, fmt.Sprintf("• %s (%s)", mat.Judul, mat.Topik))
 		}
 		lines = append(lines, "")
 	}

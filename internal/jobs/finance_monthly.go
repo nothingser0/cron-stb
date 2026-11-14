@@ -86,7 +86,10 @@ func (j *FinanceMonthlyJob) Run(ctx context.Context) error {
 	lines = append(lines, fmt.Sprintf("🗓️ **Rekap Keuangan Bulanan** — %s", monthName), "")
 
 	if len(allEntries) == 0 {
-		lines = append(lines, fmt.Sprintf("Tidak ada data transaksi yang tercatat untuk bulan %s.", monthName))
+		lines = append(lines,
+			fmt.Sprintf("Tidak ada data transaksi yang tercatat untuk bulan %s.", monthName),
+			"💡 _Catat pemasukan atau pengeluaranmu di channel ini kapan saja._",
+		)
 	} else {
 		var totalIncome, totalExpense float64
 		catMap := make(map[string]float64)
@@ -137,7 +140,7 @@ func (j *FinanceMonthlyJob) Run(ctx context.Context) error {
 			})
 
 			for i, item := range list {
-				lines = append(lines, fmt.Sprintf("%d. **%s**: Rp %s (%.1f%%)", i+1, strings.Title(item.name), formatRupiah(item.total), item.pct))
+				lines = append(lines, fmt.Sprintf("• %s: Rp %s (%.1f%%)", strings.Title(item.name), formatRupiah(item.total), item.pct))
 				if i >= 4 { // Tampilkan top 5
 					break
 				}

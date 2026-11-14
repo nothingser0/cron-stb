@@ -231,37 +231,45 @@ func formatAlertMessage(items []AirdropItem) string {
 		loc = time.FixedZone("WIB", 7*3600)
 	}
 	now := time.Now().In(loc)
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc)
 
-	totalCount := len(items)
-	displayLimit := min(totalCount, 10)
-	displayItems := items[:displayLimit]
-	remaining := totalCount - displayLimit
-
-	var lines []string
-	lines = append(lines,
-		fmt.Sprintf("**Airdrop H-1 Alert** — %s", now.Format("02 Jan 2006")),
-		"",
-		fmt.Sprintf("⚠️ **Deadline ≤ H-1:** %d airdrops", totalCount),
-		"",
-	)
-
-	if totalCount > 10 {
-		lines = append(lines, "**Top 10 by Reward:**")
-	} else {
-		lines = append(lines, "**List:**")
-	}
-
-	for _, item := range displayItems {
+	var todayItems, tomorrowItems []string
+	for _, item := range items {
+		label := fmt.Sprintf("• %s", item.Name)
 		if item.Reward != "" && !strings.EqualFold(item.Reward, "N/A") {
-			lines = append(lines, fmt.Sprintf("• %s (%s)", item.Name, item.Reward))
+			label = fmt.Sprintf("• %s (%s)", item.Name, item.Reward)
+		}
+
+		if item.TanggalGarap.Equal(today) {
+			todayItems = append(todayItems, label)
 		} else {
-			lines = append(lines, fmt.Sprintf("• %s", item.Name))
+			tomorrowItems = append(tomorrowItems, label)
 		}
 	}
 
-	if remaining > 0 {
-		lines = append(lines, "", fmt.Sprintf("_...and %d more airdrops_", remaining))
+	var lines []string
+	lines = append(lines,
+		fmt.Sprintf("🚨 **Alert Deadline Airdrop** — %s", now.Format("02 Jan 2006")),
+		"",
+	)
+
+	appendGroup := func(title string, list []string, limit int) {
+		if len(list) == 0 {
+			return
+		}
+		lines = append(lines, title)
+		take := min(len(list), limit)
+		lines = append(lines, list[:take]...)
+		if len(list) > limit {
+			lines = append(lines, fmt.Sprintf("_...dan %d airdrop lainnya_", len(list)-limit))
+		}
+		lines = append(lines, "")
 	}
+
+	appendGroup("🔥 **Berakhir Hari Ini:**", todayItems, 10)
+	appendGroup("⏳ **Berakhir Besok (H-1):**", tomorrowItems, 10)
+
+	lines = append(lines, fmt.Sprintf("⚡ _Total %d airdrop mendekati deadline. Segera selesaikan!_", len(items)))
 
 	return strings.Join(lines, "\n")
 }
