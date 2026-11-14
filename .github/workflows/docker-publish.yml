@@ -92,10 +92,3 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Clean up untagged versions in GHCR
-        if: github.event_name != 'pull_request'
-        uses: actions/delete-package-versions@v5
-        with:
-          package-name: cron-stb
-          package-type: container
-          delete-only-untagged-versions: "true"
