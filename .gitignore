@@ -1,13 +1,32 @@
-# Binaries
-*.exe
-cron-stb-arm64
-cron-stb-arm7
-cron-stb-linux-*
+# Local AI & planning workspaces
+docs-ai/
+planning/
+.omo/
+.codegraph/
+.opencode/
+.sisyphus/
 
-# Environment & Secrets (JANGAN PERNAH DI-PUSH KE GITHUB)
+# Environment variables & OAuth secrets
 .env
-*.env
+*.env.local
+credentials.json
+token.json
+token_write.json
+
+# Go build binaries & test artifacts
+cron-stb
+cron-stb.exe
+*.exe
+*.test
+*.out
+coverage.txt
+
+# Runtime data & logs
 data/
-*.json
-!credentials.example.json
-!token.example.json
+logs/
+
+# OS & Editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

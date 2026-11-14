@@ -8,15 +8,16 @@ services:
       dockerfile: Dockerfile
     container_name: cron-stb
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      - TZ=Asia/Jakarta
+      - TZ=${TZ:-Asia/Jakarta}
       - DATA_DIR=/app/data
       - HERMES_WORKSPACE_DIR=${HERMES_WORKSPACE_DIR:-/media/devmon/docker-disk/hermes-data/workspace}
       - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN:-}
       - SHEET_ID=${SHEET_ID:-}
     volumes:
       - ./data:/app/data
-      - ./.env:/app/.env:ro
       - ${HERMES_WORKSPACE_DIR:-/media/devmon/docker-disk/hermes-data/workspace}:${HERMES_WORKSPACE_DIR:-/media/devmon/docker-disk/hermes-data/workspace}:ro
     x-casaos:
       envs:
@@ -37,7 +38,6 @@ services:
 x-casaos:
   architectures:
     - arm64
-    - arm
     - amd64
   main: cron-stb
   author: Zen
